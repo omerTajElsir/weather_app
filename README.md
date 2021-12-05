@@ -1,6 +1,6 @@
-# Kalvad test: Weather app
+# Weather app
 
-This is a test weather app displaying weather for the current day and next 5 days for the
+This is an open source weather app displaying weather for the current day and next 5 days for the
 specified city. with dark and light theme.
 
 ## Environment and set up
