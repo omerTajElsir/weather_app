@@ -30,6 +30,8 @@ class _HomePageState extends State<HomePage> {
     super.dispose();
   }
 
+  TextEditingController searchController = new TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Observer(
@@ -54,36 +56,49 @@ class _HomePageState extends State<HomePage> {
                     ),
                     Expanded(
                       child: Container(
-                        padding: EdgeInsets.symmetric(horizontal: 20),
-                        decoration: BoxDecoration(
-                            color: Colors.white.withOpacity(0.15),
-                            borderRadius: BorderRadius.circular(30)),
-                        child: DropdownButton(
-                          value: dropdownvalue,
-                          underline: Container(),
-                          isExpanded: true,
-                          hint: Text(
-                            "Select City",
-                            style: TextStyle(color: Colors.black54),
-                          ),
-                          dropdownColor:
-                              Provider.of<ThemeProvider>(context).darkTheme
-                                  ? Color(0xFF404962)
-                                  : Color(0xFF6895B0),
-                          icon: Icon(Icons.keyboard_arrow_down),
-                          items: items.map((String items) {
-                            return DropdownMenuItem(
-                                value: items, child: Text(items));
-                          }).toList(),
-                          onChanged: (newValue) async {
-                            setState(() {
-                              dropdownvalue = newValue.toString();
-                            });
-                            controller.clearSearch();
-                            await controller.getWeather(dropdownvalue!);
-                          },
-                        ),
-                      ),
+                          padding: EdgeInsets.symmetric(horizontal: 20),
+                          decoration: BoxDecoration(
+                              color: Colors.white.withOpacity(0.15),
+                              borderRadius: BorderRadius.circular(30)),
+                          child: Row(
+                            children: <Widget>[
+                              Expanded(
+                                child: TextField(
+                                  controller: searchController,
+                                  onSubmitted: (value) async {
+                                    if (searchController.text != "") {
+                                      setState(() {
+                                        dropdownvalue = value.toString();
+                                      });
+                                      controller.clearSearch();
+                                      await controller
+                                          .getWeather(dropdownvalue!);
+                                      //searchController.clear();
+                                    }
+                                  },
+                                  decoration: InputDecoration(
+                                      hintText: "Enter City",
+                                      hintStyle:
+                                          TextStyle(color: Colors.black45),
+                                      border: InputBorder.none),
+                                ),
+                              ),
+                              InkWell(
+                                  onTap: () async {
+                                    if (searchController.text != "") {
+                                      setState(() {
+                                        dropdownvalue =
+                                            searchController.text.toString();
+                                      });
+                                      controller.clearSearch();
+                                      await controller
+                                          .getWeather(dropdownvalue!);
+                                      //searchController.clear();
+                                    }
+                                  },
+                                  child: Container(child: Icon(Icons.search)))
+                            ],
+                          )),
                     ),
                     SizedBox(
                       width: 30,
@@ -152,7 +167,7 @@ class _HomePageState extends State<HomePage> {
                                   imageAsset: controller.imageAsset!,
                                   week: controller.response!.alldays,
                                   onClear: () {
-                                    textController.clear();
+                                    searchController.clear();
                                     controller.clearSearch();
                                     dropdownvalue = null;
                                   },
