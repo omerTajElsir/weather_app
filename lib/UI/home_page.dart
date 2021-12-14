@@ -18,19 +18,12 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  TextEditingController textController = TextEditingController();
-
-  ///Setting list of cities
-  String? dropdownvalue;
-  var items = ['Dubai', 'Paris', 'New York', 'Milan', 'Moscow'];
-
+  TextEditingController searchController = new TextEditingController();
   @override
   void dispose() {
-    textController.dispose();
+    searchController.dispose();
     super.dispose();
   }
-
-  TextEditingController searchController = new TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -67,12 +60,9 @@ class _HomePageState extends State<HomePage> {
                                   controller: searchController,
                                   onSubmitted: (value) async {
                                     if (searchController.text != "") {
-                                      setState(() {
-                                        dropdownvalue = value.toString();
-                                      });
                                       controller.clearSearch();
                                       await controller
-                                          .getWeather(dropdownvalue!);
+                                          .getWeather(searchController.text);
                                       //searchController.clear();
                                     }
                                   },
@@ -86,13 +76,9 @@ class _HomePageState extends State<HomePage> {
                               InkWell(
                                   onTap: () async {
                                     if (searchController.text != "") {
-                                      setState(() {
-                                        dropdownvalue =
-                                            searchController.text.toString();
-                                      });
                                       controller.clearSearch();
                                       await controller
-                                          .getWeather(dropdownvalue!);
+                                          .getWeather(searchController.text);
                                       //searchController.clear();
                                     }
                                   },
@@ -169,7 +155,6 @@ class _HomePageState extends State<HomePage> {
                                   onClear: () {
                                     searchController.clear();
                                     controller.clearSearch();
-                                    dropdownvalue = null;
                                   },
                                 )
                               : SizedBox(),
